@@ -7,6 +7,9 @@ Servo servo_ud;
 bool servo_ud_flag = 0;
 int servo_ud_max = 90, servo_ud_min = 10;
 int servo_ud_now = 90;
+bool servo_under1_flag = 0, servo_under2_flag = 0;
+int servo_under_max = 170, servo_under_min = 10;
+int servo_under1_now = 90, servo_under2_now 90;
 
 int servo_ud_fun(int servo_ud_now)
 {
@@ -26,6 +29,24 @@ int servo_ud_fun(int servo_ud_now)
     return servo_ud_now;
 }
 
+int servo_fun(int servo_now, int servo_max, int servo_min, bool *servo_flag)
+{
+    if(servo_now == servo_max)
+        *servo_flag = 1;
+    if(servo_now == servo_min)
+        *servo_flag = 0;
+
+    if(*servo_flag)
+    {
+        servo_now -= 1;
+    }
+    else
+    {
+        servo_now += 1;
+    }
+    return servo_now;
+}
+
 void setup()
 {
     Serial.begin(9600);
@@ -43,39 +64,12 @@ void setup()
 
 void loop()
 {
+    servo_under1_now = servo_fun(servo_under1_now, servo_under_max, servo_under_min, &servo_under1_flag);
+    servo_under1.write(servo_under1_now);
 
-    //*以角度控制
-    for(int i = 10;i <= 170;i++)
-    {
-        servo_under1.write(i);
-        delay(20);
-        servo_under2.write(i);
-        delay(100);
-        servo_ud_now = servo_ud_fun(servo_ud_now);
-        servo_ud.write(servo_ud_now);
-    }
-    
-    for(int i = 170;i >= 10;i--)
-    {
-        servo_under1.write(i);
-        delay(20);
-        servo_under2.write(i);
-        delay(100);
-        servo_ud_now = servo_ud_fun(servo_ud_now);
-        servo_ud.write(servo_ud_now);
-    }
+    servo_under2_now = servo_fun(servo_under2_now, servo_under_max, servo_under_min, &servo_under2_flag);
+    servo_under2.write(servo_under2_now);
 
-    /*
-    for(int i = 500; i <= 2400; i+=100)
-    {
-        servo_under1.writeMicroseconds(i); // 直接以脈衝寬度控制
-        delay(300);
-    }
-    for(int i = 2400; i >= 500; i-=100)
-    {
-        servo_under1.writeMicroseconds(i);
-        delay(300);
-    }
-    */
-
+    servo_ud_now = servo_ud_fun(servo_ud_now);
+    servo_ud.write(servo_ud_now);
 }
