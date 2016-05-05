@@ -6,7 +6,7 @@ Servo servo_ud;
 
 bool servo_ud_flag = 0;
 int servo_ud_max = 90, servo_ud_min = 10;
-
+int servo_ud_now = 90;
 
 int servo_ud_fun(int servo_ud_now)
 {
@@ -44,7 +44,6 @@ void setup()
 void loop()
 {
 
-    int servo_ud_now = 90;
     //*以角度控制
     for(int i = 10;i <= 170;i++)
     {
